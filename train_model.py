@@ -13,7 +13,7 @@ def main(args):
         adj_mx = get_adjacency_matrix(graph_filename, data_filename)
 
         supervisor = DCRNNSupervisor(
-            adj_mx= None, 
+            adj_mx= adj_mx, 
             **supervisor_config.get(args.module))
 
         supervisor.train()

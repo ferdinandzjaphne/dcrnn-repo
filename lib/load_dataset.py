@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+from lib.scaler import StandardScaler
+from lib.data_loader import DataLoader
 
 def generate_train_val_test(df, batch_size, test_batch_size, **kwargs):
     # 0 is the latest observed sample.
@@ -104,7 +106,6 @@ def load_dataset(csv_file, batch_size, test_batch_size, **kwargs):
     df = df.drop(df.columns[0:7], axis=1).reset_index(drop=True)
     
     df = df.transpose()
-    print(df.shape)
 
     data = generate_train_val_test(
         df,

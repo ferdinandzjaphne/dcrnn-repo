@@ -12,9 +12,6 @@ def get_adjacency_matrix(graph_filename, data_filename, normalized_k=0.1):
     """
     adj_df = pd.read_csv(graph_filename, header=None)
     data_df = pd.read_csv(data_filename, header=None)
-    print(data_df)
-    print(data_df[0])
-    print(len(data_df[0]))
 
     num_streets = len(data_df[0])
     dist_mx = np.zeros((num_streets, num_streets), dtype=np.float32)
@@ -30,7 +27,7 @@ def get_adjacency_matrix(graph_filename, data_filename, normalized_k=0.1):
         for column, value in row.items():
             dist_mx[index, column] = haversine_distance(street_idx_to_pos[index], street_idx_to_pos[column])
     
-    print(dist_mx)
+    return dist_mx
             
 def haversine_distance(point1, point2):
     """

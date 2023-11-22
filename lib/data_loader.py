@@ -1,3 +1,5 @@
+import numpy as np
+
 class DataLoader(object):
     def __init__(self, xs, ys, batch_size, pad_with_last_sample=True, shuffle=False):
         """
