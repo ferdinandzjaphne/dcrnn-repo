@@ -1,0 +1,21 @@
+# Ignore virtual environment directories
+venv/
+env/
+env36/
+.env/
+
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+*.pyc
+
+# Ignore csv & xlsx files
+.csv/
+.xlsx/
+
+# Ignore png files
+.png/
