@@ -1,0 +1,31 @@
+
+
+urban_core:
+  csv_file: 'dataset/urban-core.csv'
+  adj_csv_file: 'dataset/Adj(urban-core).csv'
+  batch_size: 64
+  test_batch_size: 64
+  num_batches: 64
+  epoch: 100
+  epoch_num: 0
+  lr_decay_ratio: 0.1
+  test_every_n_epochs: 10
+  epsilon: 1e-8
+  base_lr: 0.01
+  steps: [20, 30, 40, 50]
+  max_grad_norm: 5
+
+urban_mix:
+  csv_file: 'dataset/urban-mix.csv'
+  adj_csv_file: 'dataset/Adj(urban-mix).csv'
+  batch_size: 64
+  test_batch_size: 64
+  num_batches: 64
+  epoch: 100
+  epoch_num: 0
+  lr_decay_ratio: 0.1
+  test_every_n_epochs: 10
+  epsilon: 1e-8
+  base_lr: 0.01
+  steps: [20, 30, 40, 50]
+  max_grad_norm: 5
