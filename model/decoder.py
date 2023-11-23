@@ -5,6 +5,7 @@ from model.seq2seq_attr import Seq2SeqAttrs
 
 class DecoderModel(nn.Module, Seq2SeqAttrs):
     def __init__(self, adj_mx, **model_kwargs):
+        print(model_kwargs)
         # super().__init__(is_training, adj_mx, **model_kwargs)
         nn.Module.__init__(self)
         Seq2SeqAttrs.__init__(self, adj_mx, **model_kwargs)

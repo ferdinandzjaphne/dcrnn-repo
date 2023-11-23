@@ -1,36 +1,61 @@
-
-
 urban_core:
-  csv_file: 'dataset/urban-core.csv'
-  adj_csv_file: 'dataset/Adj(urban-core).csv'
-  batch_size: 64
-  test_batch_size: 64
-  num_batches: 64
-  epoch: 100
-  epoch_num: 0
-  lr_decay_ratio: 0.1
-  test_every_n_epochs: 10
-  epsilon: 1e-8
-  base_lr: 0.01
-  steps: [20, 30, 40, 50]
-  max_grad_norm: 5
-  seq_len: 12
-  num_nodes: 304
-  input_dim: 1
-  output_dim: 1
-  horizon: 12
+  base_dir: data/model
+  log_level: INFO
+  data:
+    csv_file: 'dataset/urban-core.csv'
+    adj_csv_file: 'dataset/Adj(urban-core).csv'
+    batch_size: 64
+    test_batch_size: 64
+    val_batch_size: 64
+
+  model: 
+    seq_len: 12
+    num_nodes: 304
+    input_dim: 1
+    output_dim: 1
+    horizon: 12
+    num_rnn_layers: 1
+    rnn_units: 64
+    max_diffusion_step: 2
+
+  train:
+    base_lr: 0.01
+    epoch: 0
+    epochs: 1
+    lr_decay_ratio: 0.1
+    test_every_n_epochs: 10
+    epsilon: 1.0e-3
+    max_grad_norm: 5
+    steps: [20, 30, 40, 50]
+    patience: 50 # how much tolerance if there is no improvement in each epoch
 
 urban_mix:
-  csv_file: 'dataset/urban-mix.csv'
-  adj_csv_file: 'dataset/Adj(urban-mix).csv'
-  batch_size: 64
-  test_batch_size: 64
-  num_batches: 64
-  epoch: 100
-  epoch_num: 0
-  lr_decay_ratio: 0.1
-  test_every_n_epochs: 10
-  epsilon: 1e-8
-  base_lr: 0.01
-  steps: [20, 30, 40, 50]
-  max_grad_norm: 5
+  base_dir: data/model
+  log_level: INFO
+  data:
+    csv_file: 'dataset/urban-mix.csv'
+    adj_csv_file: 'dataset/Adj(urban-mix).csv'
+    batch_size: 64
+    test_batch_size: 64
+    val_batch_size: 64
+
+  model: 
+    seq_len: 12
+    num_nodes: 304
+    input_dim: 1
+    output_dim: 1
+    horizon: 12
+    num_rnn_layers: 1
+    rnn_units: 64
+    max_diffusion_step: 2
+
+  train:
+    base_lr: 0.01
+    epoch: 0
+    epochs: 5
+    lr_decay_ratio: 0.1
+    test_every_n_epochs: 10
+    epsilon: 1.0e-3
+    max_grad_norm: 5
+    steps: [20, 30, 40, 50]
+

@@ -23,7 +23,6 @@ def generate_train_val_test(df, batch_size, test_batch_size, **kwargs):
 
     print("x shape: ", x.shape, ", y shape: ", y.shape)
 
-    print(x.shape[0])
     num_samples = x.shape[0]
     num_test = round(num_samples * 0.23333333333)
     num_train = round(num_samples * 0.7)

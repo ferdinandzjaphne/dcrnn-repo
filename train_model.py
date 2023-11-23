@@ -8,8 +8,8 @@ def main(args):
     with open(args.config_filename) as f:
         supervisor_config = yaml.safe_load(f)
 
-        graph_filename = supervisor_config[args.module].get('adj_csv_file')
-        data_filename =  supervisor_config[args.module].get('csv_file')
+        graph_filename = supervisor_config[args.module].get('data').get('adj_csv_file')
+        data_filename =  supervisor_config[args.module].get('data').get('csv_file')
         adj_mx = get_adjacency_matrix(graph_filename, data_filename)
 
         supervisor = DCRNNSupervisor(
