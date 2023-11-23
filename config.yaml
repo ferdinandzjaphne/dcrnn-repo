@@ -41,7 +41,7 @@ urban_mix:
 
   model: 
     seq_len: 12
-    num_nodes: 304
+    num_nodes: 1007
     input_dim: 1
     output_dim: 1
     horizon: 12
