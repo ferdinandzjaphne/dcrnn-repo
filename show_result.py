@@ -4,15 +4,22 @@ import os
 import sys
 import yaml
 
+import matplotlib.pyplot as plt
 from lib.load_graph import get_adjacency_matrix
 from model.dcrnn_supervisor import DCRNNSupervisor
 
 
 def run_dcrnn(args):
     with open(args.config_filename) as f:
+        b = np.load('data/dcrnn_predictions.npz')
+        print(b['prediction'][0][0].shape)
+        plt.plot(b['prediction'][0][0])
+        plt.plot(b['truth'][0][0])
+        plt.show()
+
+        return
         supervisor_config = yaml.safe_load(f)
-        # b = np.load('data/dcrnn_predictions.npz')
-        # print(b)
+        
 
         graph_filename = supervisor_config[args.module].get('data').get('adj_csv_file')
         data_filename =  supervisor_config[args.module].get('data').get('csv_file')
