@@ -47,6 +47,10 @@ class DCRNNSupervisor:
         # dcrnn model
         dcrnn_model = DCRNNModel(adj_mx, **self._model_kwargs)
         self.dcrnn_model = dcrnn_model.cuda() if torch.cuda.is_available() else dcrnn_model
+
+        self._epoch_num = self._train_kwargs.get('epoch', 0)
+        if self._epoch_num > 0:
+            self.load_model()
     
     @staticmethod
     def _get_log_dir(kwargs):
@@ -73,6 +77,25 @@ class DCRNNSupervisor:
         if not os.path.exists(log_dir):
             os.makedirs(log_dir)
         return log_dir
+
+    def load_model(self):
+        self._setup_graph()
+        print(self._epoch_num)
+        assert os.path.exists('models/epo%d.tar' % self._epoch_num), 'Weights at epoch %d not found' % self._epoch_num
+        checkpoint = torch.load('models/epo%d.tar' % self._epoch_num, map_location='cpu')
+        self.dcrnn_model.load_state_dict(checkpoint['model_state_dict'])
+        self._logger.info("Loaded model at {}".format(self._epoch_num))
+
+    def _setup_graph(self):
+        with torch.no_grad():
+            self.dcrnn_model = self.dcrnn_model.eval()
+
+            val_iterator = self._data['val_loader'].get_iterator()
+
+            for _, (x, y) in enumerate(val_iterator):
+                x, y = self._prepare_data(x, y)
+                output = self.dcrnn_model(x)
+                break
 
     def train(self, patience=50, log_every=1, save_model=1,
                test_every_n_epochs=10, epsilon=1e-8):

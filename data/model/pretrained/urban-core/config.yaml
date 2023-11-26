@@ -17,13 +17,12 @@ urban_core:
     num_rnn_layers: 1
     rnn_units: 64
     max_diffusion_step: 2
-    model_filename: data/model/pretrained/urban-core/models-2.7422-24375
-
+    model_filename: data/model/pretrained/METR-LA/models-2.7422-24375
 
   train:
     base_lr: 0.01
-    epoch: 0
-    epochs: 100
+    epoch: 28
+    epochs: 29
     lr_decay_ratio: 0.1
     test_every_n_epochs: 10
     epsilon: 1.0e-3
