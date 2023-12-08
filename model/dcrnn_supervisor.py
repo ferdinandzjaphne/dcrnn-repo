@@ -4,7 +4,7 @@ import numpy as np
 import os
 from model.dcrnn_model import DCRNNModel
 from torch.utils.tensorboard import SummaryWriter
-from model.loss import masked_mae_loss
+from model.loss import masked_mae_loss, masked_mape, masked_rmse
 from lib import load_dataset as ld, utils
 import logging
 
@@ -190,6 +190,7 @@ class DCRNNSupervisor:
 
     def _prepare_data(self, x, y):
             x, y = self._get_x_y(x, y)
+            print(y.shape)
             x, y = self._get_x_y_in_correct_dims(x, y)
             return x.to(device), y.to(device)
 
@@ -204,6 +205,7 @@ class DCRNNSupervisor:
         print(y.shape)
         batch_size = x.size(1)
 
+        print(self.seq_len, batch_size, self.num_nodes, self.input_dim)
         x = x.view(self.seq_len, batch_size, self.num_nodes * self.input_dim)
         y = y.view(self.horizon, batch_size, self.num_nodes)
         return x, y
@@ -226,7 +228,7 @@ class DCRNNSupervisor:
     def _compute_loss(self, y_true, y_predicted):
         y_true = self.standard_scaler.inverse_transform(y_true)
         y_predicted = self.standard_scaler.inverse_transform(y_predicted)
-        return masked_mae_loss(y_predicted, y_true)
+        return masked_mae_loss(y_predicted, y_true), masked_mape(y_predicted, y_true, 0.0), masked_rmse(y_predicted, y_true, 0.0)
 
     def evaluate(self, dataset='val', batches_seen=0):
         """
@@ -238,6 +240,8 @@ class DCRNNSupervisor:
 
             val_iterator = self._data['{}_loader'.format(dataset)].get_iterator()
             losses = []
+            mape_loss_arr = []
+            rmse_loss_arr = []
 
             y_truths = []
             y_preds = []
@@ -246,13 +250,17 @@ class DCRNNSupervisor:
                 x, y = self._prepare_data(x, y)
 
                 output = self.dcrnn_model(x)
-                loss = self._compute_loss(y, output)
-                losses.append(loss.item())
+                mae_loss, mape_loss, rmse_loss = self._compute_loss(y, output)
+                losses.append(mae_loss.item())
+                mape_loss_arr.append(mape_loss.item())
+                rmse_loss_arr.append(rmse_loss.item())
 
                 y_truths.append(y.cpu())
                 y_preds.append(output.cpu())
 
             mean_loss = np.mean(losses)
+            mape_loss_f = np.mean(mape_loss_arr)
+            rmse_loss_f = np.mean(rmse_loss_arr)
 
             y_preds = np.concatenate(y_preds, axis=1)
             y_truths = np.concatenate(y_truths, axis=1)  # concatenate on batch dimension
@@ -265,7 +273,7 @@ class DCRNNSupervisor:
                 y_truths_scaled.append(y_truth)
                 y_preds_scaled.append(y_pred)
 
-            return mean_loss, {'prediction': y_preds_scaled, 'truth': y_truths_scaled}
+            return mean_loss, mape_loss_f, rmse_loss_f, {'prediction': y_preds_scaled, 'truth': y_truths_scaled}
 
     def save_model(self, epoch):
         if not os.path.exists('models/'):
