@@ -29,34 +29,36 @@ def get_adjacency_matrix(graph_filename, data_filename, normalized_k=0.1):
         
         # Builds street segment to position map
         street_idx_to_pos = {}
-        street_idx_to_id = {}
+        street_id_to_idx = {}
         dist_dict_list = []
+        street_ids = []
         for index, row in data_df.iterrows():
             street_idx_to_pos[index] = (row.loc[2], row.loc[3])
-            street_idx_to_id[index] = (row.loc[1])
+            street_id_to_idx[row.loc[1]] = index
+            street_ids.append(row.loc[1])
         # print(data_df[0])
         numbers = np.arange(0, num_streets)
         test_list = list(itertools.combinations(numbers, 2))
         print(len(test_list))
 
-        for i in test_list:
-            print(i)
-            distance = haversine_distance(street_idx_to_pos[i[0]], street_idx_to_pos[i[1]])
-            dist_dict_list.append({'from' : int(street_idx_to_id[i[0]]), 'to': int(street_idx_to_id[i[1]]), 'cost': distance})
+        # for i in test_list:
+        #     if adj_df.loc[i[0],i[1]] == 1:
+        #         distance = haversine_distance(street_idx_to_pos[i[0]], street_idx_to_pos[i[1]])
+        #         dist_dict_list.append({'from' : i[0], 'to': i[1], 'cost': distance})
+        
 
         # Loop through all rows and columns
-        # for index, row in adj_df.iterrows():
-        #     for column, value in row.items():
-        #         distance = haversine_distance(street_idx_to_pos[index], street_idx_to_pos[column])
-        #         dist_mx[index, column] = distance
-        #         dist_dict_list.append({'from' : int(street_idx_to_id[index]), 'to': int(street_idx_to_id[column]), 'cost': distance})
+        for index, row in adj_df.iterrows():
+            for column, value in row.items():
+                distance = haversine_distance(street_idx_to_pos[index], street_idx_to_pos[column])
+                dist_mx[index, column] = distance
 
         fieldnames = ['from', 'to', 'cost'] 
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(dist_dict_list)
 
-        return dist_mx
+        return street_ids, street_id_to_idx, dist_mx
 
 def haversine_distance(point1, point2):
     """
@@ -90,5 +92,10 @@ def haversine_distance(point1, point2):
 if __name__ == '__main__':
     graph_filename = 'dataset/Adj(urban-core).csv'
     data_filename = 'dataset/urban-core.csv'
-    adj_mx = get_adjacency_matrix(graph_filename, data_filename)
-    # pickle.dump([sensor_ids, sensor_id_to_ind, adj_mx], f, protocol=2)
+    sensor_ids, sensor_id_to_ind, adj_mx = get_adjacency_matrix(graph_filename, data_filename)
+    print(sensor_ids)
+    print(sensor_id_to_ind)
+    print(adj_mx)
+
+    with open('adj_generate.pkl', 'wb') as f:
+        pickle.dump([sensor_ids, sensor_id_to_ind, adj_mx], f, protocol=2)

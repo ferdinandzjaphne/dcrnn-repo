@@ -54,7 +54,9 @@ def generate_graph_seq2seq_io_data(
 
 
 def generate_train_val_test(args):
-    df = pd.read_csv(args.traffic_df_filename)
+    df = pd.read_csv(args.traffic_df_filename, header=None)
+    df = df.drop(df.columns[0:6], axis=1).reset_index(drop=True).transpose()
+    
     # 0 is the latest observed sample.
     x_offsets = np.sort(
         # np.concatenate(([-week_size + 1, -day_size + 1], np.arange(-11, 1, 1)))

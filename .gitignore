@@ -5,8 +5,9 @@ env36/
 .env/
 
 # Ignore compiled Python files
-__pycache__/
+__pycache__
 *.pyc
+**/__pycache__/
 
 # Ignore IDE-specific files
 .vscode/
@@ -120,3 +121,9 @@ ENV/
 
 # pycharm
 .idea/
+
+# models 
+data/
+models/
+*.pkl
+plots/
