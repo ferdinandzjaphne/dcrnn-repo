@@ -26,9 +26,12 @@ def run_dcrnn(args):
         adj_mx = get_adjacency_matrix(graph_filename, data_filename)
 
         supervisor = DCRNNSupervisor(adj_mx=adj_mx, **supervisor_config.get(args.module))
-        mean_score, outputs = supervisor.evaluate('test')
+        mean_score, mean_mape_score, mean_rmse_loss,  outputs = supervisor.evaluate('test')
         np.savez_compressed(args.output_filename, **outputs)
         print("MAE : {}".format(mean_score))
+        print("MAPE : {}".format(mean_mape_score))
+        print("RMSE : {}".format(mean_rmse_loss))
+
         print('Predictions saved as {}.'.format(args.output_filename))
 
 
